@@ -4,6 +4,7 @@ from aiogram.utils import executor
 import os
 
 
+
 bot = Bot(token=TOKEN)
 dp = Dispatcher(bot=bot)
 
@@ -17,8 +18,7 @@ async def on_startup(_):
 
 @dp.message_handler(commands=['start'])
 async def start_handler(message: types.Message):
-    await bot.send_message(chat_id=message.from_user.id, text='Hello!',
-                           reply_markup=start)
+    await bot.send_message(chat_id=message.from_user.id, text='Hello!')
     # await message.answer(text='Привет')
 
 
