@@ -4,3 +4,9 @@ __pycache__\
 .vs
 .venv
 .env
+.idea
+__pycache__\
+.vs
+.venv
+test.py
+test2.py
