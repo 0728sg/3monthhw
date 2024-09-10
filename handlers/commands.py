@@ -17,7 +17,7 @@ async def start_handler(message: types.Message):
 async def mem_handler(message: types.Message):
     folder = 'media'
 
-    photo_path = os.path.join('../media', 'img.png')
+    photo_path = os.path.join(folder, 'img.png')
 
     with open(photo_path, 'rb') as photo:
         await message.answer_photo(photo=photo)
@@ -28,7 +28,7 @@ async def mem_all_handler(message: types.Message):
     photos = os.listdir(folder)
 
     for photo_name in photos:
-        photo_path = os.path.join('../media', 'img.png', 'img_1.png')
+        photo_path = os.path.join(folder, 'img.png', 'img_1.png')
 
         if photo_name.lower().endswith(('.jpg', '.jpeg', '.png', '.gif')):
             with open(photo_path, 'rb') as photo:
@@ -40,7 +40,7 @@ async def music_handler(message: types.Message):
     folder = 'audio'
     music_name = "track.mp3.mp3"
 
-    music_path = os.path.join('../audio', 'track.mp3.mp3')
+    music_path = os.path.join(folder, 'track.mp3.mp3')
 
     with open(music_path, 'rb') as music:
         await message.answer_audio(music)
