@@ -2,7 +2,7 @@ import logging
 from aiogram.utils import executor
 from buttons import start, start_test
 from config import bot, dp, admin
-from handlers import commands, echo, quiz
+from handlers import commands, echo, quiz, callback, game
 
 async def on_startup(_):
     for i in admin:
@@ -11,6 +11,8 @@ async def on_startup(_):
 
 commands.register_commands(dp)
 quiz.register_quiz(dp)
+callback.register_handlers_quiz(dp)
+game.register_handlers_common(dp)
 
 echo.register_echo(dp)
 
