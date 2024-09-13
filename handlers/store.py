@@ -2,17 +2,20 @@ from aiogram import types, Dispatcher
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher.filters.state import State, StatesGroup
+from db import db_main
 import buttons
 from aiogram.types import ReplyKeyboardRemove
 
 
 
 class FSM_Store(StatesGroup):
+    id = State()
     name_products = State()
     size = State()
-    category = State()
     price = State()
     product_id = State()
+    category = State()
+    info_product = State()
     photo_products = State()
     submit = State()
 
@@ -74,7 +77,7 @@ async def load_photo(message: types.Message, state: FSMContext):
                 f'category: {data["category"]}\n'
                 f'price: {data["price"]}\n'
                 f'article: {data["product_id"]}\n',
-        reply_markup=buttons.submit_buttons)
+        reply_markup=buttons.submit_button)
 
     await FSM_Store.next()
 
@@ -83,8 +86,19 @@ async def submit(message: types.Message, state: FSMContext):
     kb = ReplyKeyboardRemove()
 
     if message.text == 'yes':
-        await message.answer('data is on the base', reply_markup=kb)
-        await state.finish()
+        async with state.proxy() as data:
+          await message.answer('data is on the base', reply_markup=kb)
+          await db_main.sql_insert_products(
+              id=data['id'],
+              name_products=data['name_products'],
+              size=data['size'],
+              price=data['price'],
+              product_id=data['product_id'],
+              category=data['category'],
+              indo_product=data['indo_product'],
+              photo_products=data['photo_products'],
+          )
+          await state.finish()
 
     elif message.text == 'no':
         await message.answer('you finished', reply_markup=kb)
