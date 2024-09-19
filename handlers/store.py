@@ -4,14 +4,17 @@ from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from db import db_main
 import buttons
+
 from aiogram.types import ReplyKeyboardRemove
 
 
+# from db import db_main
 
 class FSM_Store(StatesGroup):
     id = State()
     name_products = State()
     size = State()
+    collection = State()
     price = State()
     product_id = State()
     category = State()
@@ -36,6 +39,14 @@ async def load_name(message: types.Message, state: FSMContext):
 async def load_size(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['size'] = message.text
+
+    await message.answer('write product collection: ')
+    await FSM_Store.next()
+
+async def load_product_collection(message: types.Message, state: FSMContext):
+    async with state.proxy() as data:
+        data['collection_product'] = message.text
+
 
     await message.answer('write category: ')
     await FSM_Store.next()
@@ -74,6 +85,7 @@ async def load_photo(message: types.Message, state: FSMContext):
         photo=data['photo'],
         caption=f'product name: {data["name_products"]}\n'
                 f'size: {data["size"]}\n'
+                f'collection: {data["collection"]}\n'
                 f'category: {data["category"]}\n'
                 f'price: {data["price"]}\n'
                 f'article: {data["product_id"]}\n',
@@ -92,12 +104,18 @@ async def submit(message: types.Message, state: FSMContext):
               id=data['id'],
               name_products=data['name_products'],
               size=data['size'],
+              collection=data['collection'],
               price=data['price'],
               product_id=data['product_id'],
               category=data['category'],
               indo_product=data['indo_product'],
               photo_products=data['photo_products'],
           )
+          await db_main.sql_insert_collection_products(
+              product_id=data['product_id'],
+              category=data['collection']
+          )
+
           await state.finish()
 
     elif message.text == 'no':
@@ -122,6 +140,7 @@ def register_store(dp: Dispatcher):
     dp.register_message_handler(start_fsm, commands=['store'])
     dp.register_message_handler(load_name, state=FSM_Store.name_products)
     dp.register_message_handler(load_size, state=FSM_Store.size)
+    dp.register_message_handler(load_product_collection, state=FSM_Store.collection)
     dp.register_message_handler(load_category, state=FSM_Store.category)
     dp.register_message_handler(load_price, state=FSM_Store.price)
     dp.register_message_handler(load_product_id, state=FSM_Store.product_id)

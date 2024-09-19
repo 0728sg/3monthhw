@@ -21,3 +21,11 @@ async def sql_create():
             photo
         ))
         db.commit()
+async def sql_insert_collection_products(product_id, collection):
+    with sqlite3.connect('db/store.sqlite') as db_with:
+        cursor = db.cursor()
+        cursor.execute(queries.INSERT_PRODUCTS_QUERY_DETAILS, (
+            product_id,
+            collection
+        ))
+        db_with.commit()
