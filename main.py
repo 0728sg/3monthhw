@@ -1,3 +1,5 @@
+import logging
+
 from aiogram.utils import executor
 from buttons import start_test
 from config import bot, dp, admin

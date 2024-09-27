@@ -89,7 +89,7 @@ async def delete_product_handler(callback_query: types.CallbackQuery):
 
 
 
-def register_send_products_handler(dp: Dispatcher):
+def register_send_products_delete_handler(dp: Dispatcher):
     dp.register_message_handler(start_sending_products, commands=['products'])
     dp.register_callback_query_handler(send_all_products, Text(equals='show_all_delete'))
     dp.register_callback_query_handler(delete_product_handler, Text(startswith='delete'))
